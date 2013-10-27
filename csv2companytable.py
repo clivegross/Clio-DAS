@@ -5,7 +5,7 @@ import MySQLdb
 
 csvfile = 'AORD2013.csv'
 # Open database connection
-db = MySQLdb.connect("localhost","clio","dickbum69","clio" )
+db = MySQLdb.connect("localhost","clio","password","clio" )
 
 # prepare a cursor object using cursor() method
 cursor = db.cursor()
