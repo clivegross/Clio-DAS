@@ -1,8 +1,7 @@
 Clio-DAS
 ========
 
-Debian based ASX market data acquisition system to store in a MySQL database
------------------------------------
+### Debian based ASX market data acquisition system to store in a MySQL database
 
 Instructions for building *Clio-DAS*:
 
@@ -22,21 +21,21 @@ Instructions for building *Clio-DAS*:
 
 		sudo vi /etc/vsftpd.conf
 
-to allow ftp connections, search through the file and make the following changes-
-Set:
+to allow ftp connections, search through the file and make the following changes:
+Set
 
 		anonymous_enable=NO
 
-Uncomment the follwoing lines:
+Uncomment the following lines
 
 		local_enable=YES
 		write_enable=YES
 
-Add to end of file:
+Add to end of file
 
 		force_dot_files=YES
 
-Restart the FTP server with:
+Restart the FTP server with
 
 		sudo service vsftpd restart'
 

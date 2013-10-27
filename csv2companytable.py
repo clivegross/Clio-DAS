@@ -22,8 +22,11 @@ import sys
 csvfile = sys.argv[1]
 #csvfile = 'AORD2013.csv'
 
+# Get password value
+password = open('/home/pi/pword').read().split('\n')[0]
+
 # Open database connection
-db = MySQLdb.connect("localhost","clio","password","clio" )
+db = MySQLdb.connect("localhost","clio",password,"clio" )
 
 # Prepare a cursor object using cursor() method
 cursor = db.cursor()
