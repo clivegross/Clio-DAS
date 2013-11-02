@@ -9,6 +9,7 @@
 # in company table and updates price table
 import MySQLdb
 import urllib2
+import datetime as dt
 
 # Get Yahoo Finance API URL from yahoo_url.txt
 url_template = open('yahoo_url.txt').read().split('\n')[0]
@@ -41,7 +42,21 @@ ticker = symbol+'.'+exchange
 # Define URL for company price data
 url = url_template.replace('[TICKER]',ticker).replace('[DAYS]','5')
 
-# 
+# Get company price data from URL
 response = urllib2.urlopen(url).readlines()
 
+# Trim off unrequired data
+for i,element in enumerate(response):
+	if element.find('volume:') > -1:
+		j = i
+		break
+		
+response = response[j+1:]
+
+# Parse string response into useful list of data
+quotes = list()
+for period in response:
+	quote = period.split(',')
+	quote[0] = dt.datetime.fromtimestamp(int(quote[0]))
+	quotes.append(quote)
 
