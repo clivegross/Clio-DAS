@@ -9,7 +9,7 @@ isdead bool
 Announcement
 id int
 companyid int
-publishtime datetime
+publishtime timestamp
 ispricesensitive bool
 headline varchar(100)
 
@@ -20,6 +20,7 @@ name varchar(40)
 Price
 id int
 companyid int
+UTCtimestamp timestamp
 open decimal
 close decimal
 high decimal
@@ -57,6 +58,7 @@ CREATE TABLE Announcement(id INT NOT NULL AUTO_INCREMENT,
 
 CREATE TABLE Price(id INT NOT NULL AUTO_INCREMENT,
 					companyid INT NOT NULL,
+					UTCtimestamp TIMESTAMP NOT NULL,
 					open DECIMAL NOT NULL,
 					close DECIMAL NOT NULL,
 					high DECIMAL NOT NULL,
