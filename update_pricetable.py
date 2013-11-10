@@ -105,6 +105,7 @@ with open('insert.log','w') as logfile:
 			# else:
 				# If record does exist, inform user
 				# print "Record already exists, skipping"
+		print str(n)+' of '+str(N)+': Updated company '+symbol+', '+str(int(n*1.0/N*100))+'% complete'
 		# Write stock insert time into logfile
 		logfile.write('Update %d%% complete: %s quotes inserted at %s UTC\n' % (n*100.0/N,symbol,dt.datetime.today()))
 
