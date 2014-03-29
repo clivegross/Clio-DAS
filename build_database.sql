@@ -4,13 +4,13 @@ id int
 symbol varchar(5)
 name varchar(40)
 industryid int
-isdead bool
+still_exists bool
 
 Announcement
 id int
 companyid int
-publishtime timestamp
-ispricesensitive bool
+publish_time timestamp
+is_price_sensitive bool
 headline varchar(100)
 
 Industry
@@ -20,7 +20,7 @@ name varchar(40)
 Price
 id int
 companyid int
-UTCtimestamp timestamp
+timestamp_UTC timestamp
 open decimal
 close decimal
 high decimal
@@ -43,22 +43,22 @@ USE clio
 
 # create tables
 CREATE TABLE Company(id INT NOT NULL AUTO_INCREMENT,
-					symbol VARCHAR(5) NOT NULL,
-					name VARCHAR(40),
+					symbol VARCHAR(10) NOT NULL,
+					name VARCHAR(50),
 					industryid INT,
-					isdead BOOL,
+					still_exists BOOL,
 					PRIMARY KEY (id));
 
 CREATE TABLE Announcement(id INT NOT NULL AUTO_INCREMENT,
 						companyid INT NOT NULL,
 						publish_time TIMESTAMP NOT NULL,
-						is_pricesensitive BOOL NOT NULL,
+						is_price_sensitive BOOL NOT NULL,
 						headline VARCHAR(100) NOT NULL,
 						PRIMARY KEY (id));
 
 CREATE TABLE Price(id INT NOT NULL AUTO_INCREMENT,
 					companyid INT NOT NULL,
-					UTCtimestamp TIMESTAMP NOT NULL,
+					timestamp_UTC TIMESTAMP NOT NULL,
 					open DECIMAL NOT NULL,
 					close DECIMAL NOT NULL,
 					high DECIMAL NOT NULL,

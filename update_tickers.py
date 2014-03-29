@@ -1,8 +1,8 @@
 #!/usr/bin/python
-# 
+#
 # update_pricetable.py
 # Clive Gross, Oct 2013
-# 
+#
 # Usage:
 #
 # Fetches intraday prices from Yahoo Finance for each company
@@ -11,52 +11,72 @@ import MySQLdb
 import urllib2
 import datetime as dt
 
+
+# Define functions here
+def get_company_ids(dbcursor):
+    # Query to select all IDs from Company table
+    select_query = 'SELECT id FROM Company'
+    # Execute query
+    dbcursor.execute(select_query)
+    # Fetch all Company IDs from table and convert from tuple to list of integers
+    cids = dbcursor.fetchall()
+    cids = [int(row[0]) for row in cids]
+    return cids
+
+
+def get_ticker_from_yahoo(url_template, symbol, exchange):
+     # Ticker symbol in correct format for Yahoo API, ie SYMBOL.EXCHANGE
+     symbol_yahoo = symbol+'.'+exchange
+     # Define URL for company price data
+     url = url_template.replace('[SYMBOL]',ticker).replace('[DAYS]','5')
+     # Get company price data from URL
+     response = urllib2.urlopen(url).readlines()
+     return response
+
+
+def select_symbol_from_id(cursor, companyid):
+    # Query to select symbol
+    select_query = 'SELECT symbol \
+    FROM Company \
+    WHERE id = "%d"' \
+        % companyid
+    # Execute query
+    cursor.execute(select_query)
+    # Fetch all Company IDs from table and convert from tuple to list of integers
+    symbol = cursor.fetchone()[0]
+    return symbol
+
 # Get Yahoo Finance API URL from yahoo_url.txt
 url_template = open('yahoo_url.txt').read().split('\n')[0]
-url_template = "http://chartapi.finance.yahoo.com/instrument/1.0/[TICKER]/chartdata;type=quote;range=[DAYS]d/csv"
+# url_template = "http://chartapi.finance.yahoo.com/instrument/1.0/[SYMBOL]/chartdata;type=quote;range=[DAYS]d/csv"
 
+# ASX exchange symbol for Yahoo
+exchange = 'AX'
+
+# database name
+dbname = "clio"
+# MySQL username
+user = "clio "
 # Get password value
-password = open('/home/pi/pword').read().split('\n')[0]
+password = open('~/pword').read().split('\n')[0]
 
 # Open database connection
-db = MySQLdb.connect("localhost","clio",password,"clio" )
-
+db = MySQLdb.connect("localhost", user, password, dbname)
 # Prepare a cursor object using cursor() method
 cursor = db.cursor()
 
-# Query to select all IDs from Company table
-select_query = 'SELECT id FROM Company'
-
-# Execute query
-cursor.execute(select_query)
-
-# Fetch all Company IDs from table and convert from tuple to list of integers
-cids = cursor.fetchall()
-cids = [int(row[0]) for row in cids]
+# Get list of all company IDs from clio.Company table
+cids = get_company_ids(cursor)
 N = len(cids)
 
 # Initialise log file
 with open('insert.log','w') as logfile:
     # Loop through company list, pull Yahoo Finance quotes and insert into Price table
     for n,cid in enumerate(cids):
-        # Query to select symbol
-        select_query = 'SELECT symbol \
-        FROM Company \
-        WHERE id = "%d"' \
-                       % cid
-        # Execute query
-        cursor.execute(select_query)
-        # Fetch all Company IDs from table and convert from tuple to list of integers
-        symbol = cursor.fetchone()[0]
-        # ASX exchange code for Yahoo
-        exchange = 'AX'
-        # Ticker symbol in correct format for API, ie SYMBOL.EXCHANGE
-        ticker = symbol+'.'+exchange
-        # Define URL for company price data
-        url = url_template.replace('[TICKER]',ticker).replace('[DAYS]','5')
 
-        # Get company price data from URL
-        response = urllib2.urlopen(url).readlines()
+        symbol = select_symbol_from_id(cursor, cid)
+
+        response = get_ticker_from_yahoo(url_template, symbol, exchange)
 
         # Trim off unrequired data
         for i,element in enumerate(response):
