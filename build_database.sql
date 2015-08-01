@@ -4,7 +4,7 @@ id int
 symbol varchar(5)
 name varchar(40)
 industryid int
-still_exists bool
+is_survivor bool
 
 Announcement
 id int
@@ -13,6 +13,12 @@ publish_time timestamp
 is_price_sensitive bool
 headline varchar(100)
 
+Index
+id int
+symbol varchar(5)
+name varchar(40)
+rebalance_freq int (number of rebalances per annum, eg 4 = quartlerly rebalnce)
+
 Industry
 id int
 name varchar(40)
@@ -20,16 +26,24 @@ name varchar(40)
 Price
 id int
 companyid int
-timestamp_UTC timestamp
+timestamp timestamp
 open decimal
 close decimal
 high decimal
 low decimal
 volume int
+
+Index_Company_map
+id int
+indexid int
+companyid int
+year int
+period int ((intrayear period], eg 02 may be quarter 2 or month 2, depending on rebalance frequency of index)
+
 */
 
 # create user clio
-CREATE USER 'clio'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'clio'@'localhost' IDENTIFIED BY 'c71o';
 
 # create database clio
 CREATE DATABASE clio;
@@ -46,7 +60,7 @@ CREATE TABLE Company(id INT NOT NULL AUTO_INCREMENT,
 					symbol VARCHAR(10) NOT NULL,
 					name VARCHAR(50),
 					industryid INT,
-					still_exists BOOL,
+					is_survivor BOOL,
 					PRIMARY KEY (id));
 
 CREATE TABLE Announcement(id INT NOT NULL AUTO_INCREMENT,
@@ -58,7 +72,7 @@ CREATE TABLE Announcement(id INT NOT NULL AUTO_INCREMENT,
 
 CREATE TABLE Price(id INT NOT NULL AUTO_INCREMENT,
 					companyid INT NOT NULL,
-					timestamp_UTC TIMESTAMP NOT NULL,
+					timestamp TIMESTAMP NOT NULL,
 					open DECIMAL NOT NULL,
 					close DECIMAL NOT NULL,
 					high DECIMAL NOT NULL,
@@ -69,3 +83,16 @@ CREATE TABLE Price(id INT NOT NULL AUTO_INCREMENT,
 CREATE TABLE Industry(id INT NOT NULL AUTO_INCREMENT,
 					name VARCHAR(40),
 					PRIMARY KEY (id));
+
+CREATE TABLE Market_Index(id INT NOT NULL AUTO_INCREMENT,
+                                        symbol VARCHAR(10) NOT NULL,
+                                        name VARCHAR(50) NOT NULL,
+                                        rebalance_freq INT,
+                                        PRIMARY KEY (id));
+
+CREATE TABLE Index_Company_map(id INT NOT NULL AUTO_INCREMENT,
+                                        indexid INT NOT NULL,
+                                        companyid INT NOT NULL,
+					year INT NOT NULL,
+                                        period INT NOT NULL,
+                                        PRIMARY KEY (id));
