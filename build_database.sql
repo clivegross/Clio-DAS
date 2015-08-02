@@ -43,7 +43,7 @@ period int ((intrayear period], eg 02 may be quarter 2 or month 2, depending on 
 */
 
 # create user clio
-CREATE USER 'clio'@'localhost' IDENTIFIED BY 'c71o';
+CREATE USER 'clio'@'localhost' IDENTIFIED BY 'password';
 
 # create database clio
 CREATE DATABASE clio;
@@ -85,14 +85,14 @@ CREATE TABLE Industry(id INT NOT NULL AUTO_INCREMENT,
 					PRIMARY KEY (id));
 
 CREATE TABLE Market_Index(id INT NOT NULL AUTO_INCREMENT,
-                                        symbol VARCHAR(10) NOT NULL,
-                                        name VARCHAR(50) NOT NULL,
-                                        rebalance_freq INT,
-                                        PRIMARY KEY (id));
+                            symbol VARCHAR(10) NOT NULL,
+                            name VARCHAR(50) NOT NULL,
+                            rebalance_freq INT,
+                            PRIMARY KEY (id));
 
 CREATE TABLE Index_Company_map(id INT NOT NULL AUTO_INCREMENT,
-                                        indexid INT NOT NULL,
-                                        companyid INT NOT NULL,
-					year INT NOT NULL,
-                                        period INT NOT NULL,
-                                        PRIMARY KEY (id));
+                                indexid INT NOT NULL,
+                                companyid INT NOT NULL,
+								year INT NOT NULL,
+                                period INT NOT NULL,
+                                PRIMARY KEY (id));
